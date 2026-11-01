@@ -24,11 +24,16 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: go.mod   # caches modules and build cache, keyed on go.sum
-      - uses: go-task/setup-task@a00fbb05ce67b35648be3c78cbc9fd85354c757e # v2.2.0
+      - uses: step-security/go-task-setup-task@dd101f23669823438597b4ef3482fabd64e6055b # v2.2.0
         with:
           # An exact version skips the action's release lookup, which fails
           # whenever the GitHub API answers without 3.x releases (Renovate
@@ -66,11 +71,16 @@ jobs:
       attestations: write
       artifact-metadata: write
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: go.mod
-      - uses: go-task/setup-task@a00fbb05ce67b35648be3c78cbc9fd85354c757e # v2.2.0
+      - uses: step-security/go-task-setup-task@dd101f23669823438597b4ef3482fabd64e6055b # v2.2.0
         with:
           version: 3.54.0 # exact, see the test job
       - name: build packages
@@ -96,7 +106,7 @@ jobs:
           done
       - name: generate SBOM
         if: inputs.version != ''
-        uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
+        uses: step-security/sbom-action@28bb7d0d2869c9ab0e5571c93591747945819d39 # v0.24.2
         with:
           path: sbom-root
           format: spdx-json
