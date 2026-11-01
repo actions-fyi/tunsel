@@ -65,7 +65,7 @@ jobs:
   build:
     name: Build
     needs: version
-    uses: ./.github/workflows/build.yml
+    uses: $/.github/workflows/build.yml
     with:
       version: ${{ needs.version.outputs.version }}
     permissions:
