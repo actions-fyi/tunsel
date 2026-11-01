@@ -1,4 +1,4 @@
-name: ci
+name: Build
 
 on:
   push:
@@ -15,6 +15,9 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: build-${{ github.ref }}
+
 defaults:
   run:
     shell: bash   # -eo pipefail
@@ -22,6 +25,7 @@ defaults:
 # Actions are pinned to commit SHAs; Renovate keeps them current.
 jobs:
   test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -62,6 +66,7 @@ jobs:
           done
 
   ipk:
+    name: IPK
     needs: test
     runs-on: ubuntu-latest
     permissions:
