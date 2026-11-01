@@ -1,4 +1,4 @@
-name: release
+name: Release
 
 # Cuts the next version from main: tests, builds and attests the packages, then
 # leaves a draft release with them attached. The release goes out when the draft is published by hand; with immutable releases
@@ -26,11 +26,17 @@ defaults:
 
 jobs:
   version:
+    name: Determine Version
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.next.outputs.version }}
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0   # all tags
@@ -57,8 +63,9 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
   build:
+    name: Build
     needs: version
-    uses: ./.github/workflows/ci.yml
+    uses: $/.github/workflows/build.yml
     with:
       version: ${{ needs.version.outputs.version }}
     permissions:
@@ -68,11 +75,17 @@ jobs:
       artifact-metadata: write
 
   draft:
+    name: Draft Release
     needs: [version, build]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: packages
