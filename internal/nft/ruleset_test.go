@@ -4,6 +4,7 @@ import (
 	"net/netip"
 	"os"
 	"os/exec"
+	"regexp"
 	"strings"
 	"testing"
 	"time"
@@ -218,6 +219,14 @@ const want = `table inet tunsel {
 }
 `
 
+// elementBreak is where nft wraps a long element list. Newer nft versions
+// wrap by line width, older ones less eagerly, so the comparison ignores it.
+var elementBreak = regexp.MustCompile(`,\n\s+`)
+
+func normalize(ruleset string) string {
+	return elementBreak.ReplaceAllString(ruleset, ", ")
+}
+
 func TestApply(t *testing.T) {
 	m, run := netns(t)
 	rs := sample()
@@ -226,7 +235,7 @@ func TestApply(t *testing.T) {
 		t.Fatal(err)
 	}
 	got := run("nft", "list", "table", "inet", "tunsel")
-	if got != want {
+	if normalize(got) != normalize(want) {
 		t.Errorf("ruleset mismatch:\n--- got\n%s\n--- want\n%s", got, want)
 	}
 
