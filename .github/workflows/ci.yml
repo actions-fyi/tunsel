@@ -15,6 +15,14 @@ on:
 permissions:
   contents: read
 
+# A new push to a pull request supersedes its running checks. Runs on main and
+# release builds are never cancelled mid-run; they wait for the one before.
+# Called from release.yml, github.workflow is "release", so this group never
+# collides with release.yml's own one.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 defaults:
   run:
     shell: bash   # -eo pipefail
@@ -62,9 +70,9 @@ jobs:
     permissions:
       contents: read
       # Signed provenance and SBOM attestations on releases.
-      id-token: write
-      attestations: write
-      artifact-metadata: write
+      id-token: write          # OIDC token to sign the attestations
+      attestations: write      # store the provenance and SBOM attestations
+      artifact-metadata: write # record the attestations as artifact metadata
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
