@@ -1,8 +1,7 @@
 name: release
 
-# Cuts the next version from main: tests, builds, pushes and attests the image
-# and packages, then leaves a draft release with the packages attached. The
-# release goes out when the draft is published by hand; with immutable releases
+# Cuts the next version from main: tests, builds and attests the packages, then
+# leaves a draft release with them attached. The release goes out when the draft is published by hand; with immutable releases
 # that locks its assets and tag.
 on:
   workflow_dispatch:
@@ -62,10 +61,8 @@ jobs:
     uses: ./.github/workflows/ci.yml
     with:
       version: ${{ needs.version.outputs.version }}
-    secrets: inherit   # registry credentials, if set
     permissions:
       contents: read
-      packages: write
       id-token: write
       attestations: write
       artifact-metadata: write

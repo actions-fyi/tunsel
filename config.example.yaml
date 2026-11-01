@@ -84,6 +84,6 @@ log:
   format: text             # text | json
 
 status:
-  socket: /run/tunsel/tunsel.sock   # directory is mounted in the container
+  socket: /run/tunsel/tunsel.sock
 metrics:
   listen: ""               # phase 3; must stay empty for now
