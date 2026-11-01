@@ -1,4 +1,4 @@
-name: release
+name: Release
 
 # Cuts the next version from main: tests, builds and attests the packages, then
 # leaves a draft release with them attached. The release goes out when the draft is published by hand; with immutable releases
@@ -26,6 +26,7 @@ defaults:
 
 jobs:
   version:
+    name: Determine Version
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     outputs:
@@ -62,6 +63,7 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
   build:
+    name: Build
     needs: version
     uses: ./.github/workflows/ci.yml
     with:
@@ -73,6 +75,7 @@ jobs:
       artifact-metadata: write
 
   draft:
+    name: Draft Release
     needs: [version, build]
     runs-on: ubuntu-latest
     permissions:
