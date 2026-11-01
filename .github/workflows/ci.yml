@@ -48,7 +48,9 @@ jobs:
           # One annotation per failed step with the failing tests' output, so
           # the cause shows on the run page without opening the log.
           for log in unit.log integration.log; do
-            [ -f "$log" ] && grep -q -E '^(--- FAIL|FAIL|panic:)' "$log" || continue
+            if [ ! -f "$log" ] || ! grep -q -E '^(--- FAIL|FAIL|panic:)' "$log"; then
+              continue
+            fi
             msg=$(grep -E -B2 -A25 '^\s*(--- FAIL|panic:)|_test\.go:[0-9]+:' "$log" | head -200 |
               sed -e 's/%/%25/g' -e 's/\r/%0D/g' | sed ':a;N;$!ba;s/\n/%0A/g')
             echo "::error title=go test failed ($log)::$msg"
