@@ -82,15 +82,6 @@ tunsel status -learned               # what was measured and where it goes
 
 opkg keeps a changed config on upgrade and removal, and sysupgrade keeps it.
 
-Container (host network; see DESIGN.md §9.1 for the runtime contract):
-
-```sh
-cp config.example.yaml config.yaml   # edit
-docker compose up -d
-docker exec tunsel /tunsel status
-docker kill -s HUP tunsel            # reload config
-```
-
 Natively (builds use [Task](https://taskfile.dev); `task --list` shows all tasks):
 
 ```sh
@@ -109,6 +100,5 @@ as UCI.
 ```sh
 task test                            # unit tests (nft tests skip without root)
 sudo task integration                # all tests incl. network-namespace end-to-end test
-task image                           # local image for the build host's platform
 packaging/openwrt/smoke-test.sh bin/tunsel_*_x86_64.ipk bin/luci-app-tunsel_*_all.ipk   # on OpenWrt with procd and rpcd (Docker)
 ```

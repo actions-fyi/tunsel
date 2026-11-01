@@ -187,59 +187,13 @@ Off by default (`learning.enabled`); needs at least two tunnels.
 
 - Language: Go, static binary, no cgo. Libraries: `github.com/google/nftables`, a netlink conntrack client.
 - Targets: `linux/arm/v7`, `linux/arm64`, `linux/amd64`.
-- Container: see 9.1.
-- Also runnable natively as a service: OpenWrt package with a procd service (9.2), or systemd.
-- Config: YAML, or UCI on OpenWrt (9.2), chosen by file name (`.yaml`/`.yml` is YAML); both map to the same structure and the same validation, with unknown keys as errors. Validated at start; `SIGHUP` reloads. A reload keeps the health state of tunnels whose configuration is unchanged. `status.socket` and `log.format` changes need a restart.
+- Runs natively as a service: OpenWrt package with a procd service (9.1), or systemd.
+- Config: YAML, or UCI on OpenWrt (9.1), chosen by file name (`.yaml`/`.yml` is YAML); both map to the same structure and the same validation, with unknown keys as errors. Validated at start; `SIGHUP` reloads. A reload keeps the health state of tunnels whose configuration is unchanged. `status.socket` and `log.format` changes need a restart.
 - CLI: `tunsel run -config <path>`, `tunsel check -config <path>`, `tunsel status [-socket <path>] [-json] [-flows] [-history]`, `tunsel version`.
 
-### 9.1 Container image
+### 9.1 OpenWrt package
 
-A working Docker engine on the host is assumed; the tool ships only the image and a compose file.
-
-#### Image
-
-- Multi-arch manifest: `linux/arm/v7` (`GOARM=7`), `linux/arm64`, `linux/amd64`.
-- Base `scratch`: the static binary only, as entrypoint. No shell, no `nft` binary — nftables and conntrack are driven via netlink.
-- Fixed paths: config `/etc/tunsel/config.yaml`, runtime directory `/run/tunsel/` (status socket `/run/tunsel/tunsel.sock`).
-- Name and registry are a CI parameter (`<registry>/tunsel`). Tags: `X.Y.Z`, `X.Y`, `latest`.
-
-#### Runtime contract
-
-| Aspect | Requirement |
-|---|---|
-| Network | host network namespace (`network_mode: host`) |
-| Capabilities | drop all, add `NET_ADMIN` (nftables, conntrack), `NET_RAW` (ICMP probes, `SO_BINDTODEVICE`) |
-| Filesystem | read-only root; config mounted read-only; `/run/tunsel/` mounted as a directory (a socket file cannot be bind-mounted reliably, since it is recreated on start) |
-| Signals | `SIGHUP` reloads config; `SIGTERM` shuts down cleanly, honoring `cleanup_on_exit` |
-| Logs | stdout/stderr only; log routing is the engine's concern |
-| Status | `docker exec tunsel /tunsel status`, or the host CLI against the mounted socket |
-
-**compose.yaml** (shipped in the repository)
-
-```yaml
-services:
-  tunsel:
-    image: ${TUNSEL_IMAGE:-tunsel}:${TUNSEL_TAG:-latest}
-    build: .
-    container_name: tunsel
-    network_mode: host
-    cap_drop: [ALL]
-    cap_add: [NET_ADMIN, NET_RAW]
-    security_opt: ["no-new-privileges:true"]
-    read_only: true
-    volumes:
-      - ${TUNSEL_CONFIG:-./config.yaml}:/etc/tunsel/config.yaml:ro
-      - ${TUNSEL_RUN_DIR:-/run/tunsel}:/run/tunsel
-    restart: unless-stopped
-    stop_signal: SIGTERM
-    stop_grace_period: 10s
-```
-
-Reload: `docker kill -s HUP tunsel`.
-
-### 9.2 OpenWrt package
-
-For OpenWrt and Turris OS, where Docker support is limited. Built without the SDK by `packaging/openwrt/build-ipk.sh` (`task ipk`), in the SDK's format; CI attaches one package per architecture to each release.
+For OpenWrt and Turris OS. Built without the SDK by `packaging/openwrt/build-ipk.sh` (`task ipk`), in the SDK's format; CI attaches one package per architecture to each release.
 
 - Architectures: opkg names mapped to the three Go targets (`arm_cortex-a*` → `arm/v7`, `aarch64_*` → `arm64`, `x86_64` → `amd64`); `IPK_ARCHS` in `Taskfile.yml` lists the released ones.
 - Depends: `kmod-nft-core`, `kmod-nft-fib`, `kmod-nf-conntrack-netlink` (ctnetlink is not part of a default image).
@@ -267,7 +221,7 @@ For OpenWrt and Turris OS, where Docker support is limited. Built without the SD
 
 ## 11. Phases
 
-1. **MVP (implemented):** config loading, nft table management, health checks with hysteresis, default switching, `exclude`, `static_pref` with health filtering, conntrack flush on failure, status command, container image.
+1. **MVP (implemented):** config loading, nft table management, health checks with hysteresis, default switching, `exclude`, `static_pref` with health filtering, conntrack flush on failure, status command.
 2. **Learning (implemented):** conntrack candidates, TCP probing, margins, TTL, damping (§7). A non-empty `metrics.listen` is rejected until phase 3.
 3. **Optional:** dynamic prefix sources for `static_pref` (URL lists with refresh), metrics.
 
@@ -277,4 +231,4 @@ For OpenWrt and Turris OS, where Docker support is limited. Built without the SD
 - nft tests (root): the ruleset is installed in a throwaway network namespace and compared against `nft list` output; learned elements are added, read back with their remaining time and dropped by a replacement.
 - Integration test (root, `-tags integration`): LAN client, router, two veth "tunnels" to provider namespaces and a WAN namespace. Per-provider counters assert the path of: default, static and excluded destinations, local output, failover (probes dropped) including a running flow moved by the conntrack flush, recovery, link down with the policy route lost, reload (valid and invalid) and clean shutdown. A second test learns from conntrack: of two destinations pinged via the default wg-b, the one provider B does not answer on TCP 443 is learned for wg-a and its next connection goes there, the one both answer alike stays on the default, and a restart adopts the learned entry. IPv6 checks are skipped on hosts booted with `ipv6.disable=1`.
 - OpenWrt smoke test (Docker, `packaging/openwrt/smoke-test.sh`): the x86_64 package and `luci-app-tunsel` installed into an OpenWrt rootfs booted with procd, dependencies from the feeds; install (disabled), start (invalid and valid config), reload (explicit and by `reload_config`), disable and enable (boot enablement included), the rpcd plugin's methods, upgrade (config kept), stop and removal.
-- CI runs all of the above and builds the multi-arch image and the packages. Releases are cut by the manually run release workflow, which bumps the major, minor or patch part of the latest version, runs the same jobs, pushes and attests the image and leaves a draft release with the packages; publishing the draft creates the `v*` tag.
+- CI runs all of the above and builds the packages. Releases are cut by the manually run release workflow, which bumps the major, minor or patch part of the latest version, runs the same jobs, attests the packages and leaves a draft release with them; publishing the draft creates the `v*` tag.

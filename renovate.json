@@ -2,8 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
-    "helpers:pinGitHubActionDigests",
-    "docker:pinDigests"
+    "helpers:pinGitHubActionDigests"
   ],
   "postUpdateOptions": ["gomodTidy"],
   "customManagers": [
@@ -29,11 +28,6 @@
       "description": "Major updates wait for a human review",
       "matchUpdateTypes": ["major"],
       "automerge": false
-    },
-    {
-      "description": "Move the Go version in go.mod and the Docker build image together",
-      "matchPackageNames": ["go", "golang"],
-      "groupName": "Go toolchain"
     }
   ]
 }

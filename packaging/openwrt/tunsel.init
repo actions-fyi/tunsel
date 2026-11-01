@@ -1,5 +1,5 @@
 #!/bin/sh /etc/rc.common
-# procd service, installed by the package as /etc/init.d/tunsel (DESIGN.md §9.2).
+# procd service, installed by the package as /etc/init.d/tunsel (DESIGN.md §9.1).
 
 USE_PROCD=1
 START=90
