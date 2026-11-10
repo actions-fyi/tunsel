@@ -5,17 +5,87 @@ version: 'v0.0.3'
 workflows:
     '.github/workflows/actions-lock-explain.yml': []
     '.github/workflows/actions-lock-push.yml': []
+    '.github/workflows/audit.yml':
+        - 'actions/checkout@v7.0.1'
+        - 'step-security/harden-runner@v2.22.4'
+        - 'zizmorcore/zizmor-action@v0.8.1'
     '.github/workflows/auto-label.yml': []
+    '.github/workflows/build.yml':
+        - 'actions/attest@v4.2.2'
+        - 'actions/checkout@v7.0.1'
+        - 'actions/setup-go@v7.0.0'
+        - 'actions/upload-artifact@v7.0.2'
+        - 'anchore/sbom-action@v0.24.3'
+        - 'step-security/go-task-setup-task@v2.2.0'
+        - 'step-security/harden-runner@v2.22.4'
     '.github/workflows/claude.yml': []
     '.github/workflows/label-sync.yml': []
-    '.github/workflows/pr-event.yml':
+    '.github/workflows/lint.yml':
+        - 'actions/checkout@v7.0.1'
+        - 'kjanat/actionlint@v1.17.1'
         - 'step-security/harden-runner@v2.22.4'
     '.github/workflows/pr-metadata.yml': []
+    '.github/workflows/release.yml':
+        - 'actions/checkout@v7.0.1'
+        - 'actions/download-artifact@v8.0.2'
+        - 'step-security/harden-runner@v2.22.4'
     '.github/workflows/renovate.yml': []
     '.github/workflows/zizmor.yml': []
 dependencies:
+    'actions/attest@v4.2.2':
+        ref: 'v4.2.2'
+        commit: 'sha1-1e69f48acb82d1966a394da916b4c1698aa569d6'
+        owner_id: 44036562
+        repo_id: 760701061
+    'actions/checkout@v7.0.1':
+        ref: 'v7.0.1'
+        commit: 'sha1-3d3c42e5aac5ba805825da76410c181273ba90b1'
+        owner_id: 44036562
+        repo_id: 197814629
+    'actions/download-artifact@v8.0.2':
+        ref: 'v8.0.2'
+        commit: 'sha1-9000827ccba6bdab643e8b6fd33ac0654aef8333'
+        owner_id: 44036562
+        repo_id: 192626254
+    'actions/setup-go@v7.0.0':
+        ref: 'v7.0.0'
+        commit: 'sha1-b7ad1dad31e06c5925ef5d2fc7ad053ef454303e'
+        owner_id: 44036562
+        repo_id: 192624594
+    'actions/upload-artifact@v7.0.2':
+        ref: 'v7.0.2'
+        commit: 'sha1-cf430e030ddbb5b0abf93d22962f4752f3646cd9'
+        owner_id: 44036562
+        repo_id: 192625955
+    'anchore/sbom-action@v0.24.3':
+        ref: 'v0.24.3'
+        commit: 'sha1-66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c'
+        owner_id: 16208487
+        repo_id: 399925381
+    'github/codeql-action@9b3254085494b55a0f7c4c2b3d2d52cc712ce370':
+        ref: 'v4.39.1'
+        commit: 'sha1-9b3254085494b55a0f7c4c2b3d2d52cc712ce370'
+        owner_id: 9919
+        repo_id: 259445878
+    'kjanat/actionlint@v1.17.1':
+        ref: 'v1.17.1'
+        commit: 'sha1-220b76cfa568e00ed8b3c476898f849a722b88e2'
+        owner_id: 6353477
+        repo_id: 1326162482
+    'step-security/go-task-setup-task@v2.2.0':
+        ref: 'v2.2.0'
+        commit: 'sha1-dd101f23669823438597b4ef3482fabd64e6055b'
+        owner_id: 88700172
+        repo_id: 1300084777
     'step-security/harden-runner@v2.22.4':
         ref: 'v2.22.4'
         commit: 'sha1-1d88384fd173af6ecb012dfd0264a306b711241a'
         owner_id: 88700172
         repo_id: 422287306
+    'zizmorcore/zizmor-action@v0.8.1':
+        ref: 'v0.8.1'
+        commit: 'sha1-45d7276c9ca790aabd705e31ca99c6185c3e76dd'
+        owner_id: 210636713
+        repo_id: 985558803
+        uses:
+            - 'github/codeql-action@9b3254085494b55a0f7c4c2b3d2d52cc712ce370'
