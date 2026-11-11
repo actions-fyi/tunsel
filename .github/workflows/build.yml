@@ -29,15 +29,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
+        uses: step-security/harden-runner@v2.22.4
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-go@v7.0.0
         with:
           go-version-file: go.mod   # caches modules and build cache, keyed on go.sum
-      - uses: step-security/go-task-setup-task@dd101f23669823438597b4ef3482fabd64e6055b # v2.2.0
+      - uses: step-security/go-task-setup-task@v2.2.0
         with:
           # An exact version skips the action's release lookup, which fails
           # whenever the GitHub API answers without 3.x releases (Renovate
@@ -77,15 +77,15 @@ jobs:
       artifact-metadata: write
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
+        uses: step-security/harden-runner@v2.22.4
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-go@v7.0.0
         with:
           go-version-file: go.mod
-      - uses: step-security/go-task-setup-task@dd101f23669823438597b4ef3482fabd64e6055b # v2.2.0
+      - uses: step-security/go-task-setup-task@v2.2.0
         with:
           version: 3.54.0 # exact, see the test job
       - name: build packages
@@ -96,7 +96,7 @@ jobs:
         run: packaging/openwrt/smoke-test.sh bin/tunsel_*_x86_64.ipk bin/luci-app-tunsel_*_all.ipk
       - name: attest build provenance
         if: inputs.version != ''
-        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        uses: actions/attest@v4.2.2
         with:
           subject-path: bin/*.ipk
       # One SBOM for all packages, from what they install: syft reads the Go
@@ -111,7 +111,7 @@ jobs:
           done
       - name: generate SBOM
         if: inputs.version != ''
-        uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
+        uses: anchore/sbom-action@v0.24.3
         with:
           path: sbom-root
           format: spdx-json
@@ -119,14 +119,14 @@ jobs:
           upload-release-assets: false
       - name: attest SBOM
         if: inputs.version != ''
-        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        uses: actions/attest@v4.2.2
         with:
           subject-path: bin/*.ipk
           sbom-path: bin/tunsel.spdx.json
       # release.yml attaches these to the draft release.
       - name: keep packages for the release
         if: inputs.version != ''
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: packages
           path: |
