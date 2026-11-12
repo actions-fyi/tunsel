@@ -1,34 +1,18 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "github>actions-fyi/.github",
-    "config:recommended",
-    "helpers:pinGitHubActionDigests"
-  ],
+  "extends": ["github>actions-fyi/.github"],
   "postUpdateOptions": ["gomodTidy"],
   "customManagers": [
     {
       "customType": "regex",
-      "description": "The Task version pinned for go-task/setup-task in the workflows",
+      "description": "The Task version pinned for go-task/setup-task (or its step-security fork) in the workflows",
       "managerFilePatterns": ["/^\\.github/workflows/[^/]+\\.ya?ml$/"],
       "matchStrings": [
-        "go-task/setup-task@\\S+[^\\n]*\\n\\s+with:\\n(?:\\s+#[^\\n]*\\n)*\\s+version: (?<currentValue>\\d+\\.\\d+\\.\\d+)"
+        "go-task[/-]setup-task@\\S+[^\\n]*\\n\\s+with:\\n(?:\\s+#[^\\n]*\\n)*\\s+version: (?<currentValue>\\d+\\.\\d+\\.\\d+)"
       ],
       "depNameTemplate": "go-task/task",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+)$"
-    }
-  ],
-  "packageRules": [
-    {
-      "description": "Merge non-major updates automatically once all required checks pass",
-      "matchUpdateTypes": ["minor", "patch", "pin", "pinDigest", "digest"],
-      "automerge": true
-    },
-    {
-      "description": "Major updates wait for a human review",
-      "matchUpdateTypes": ["major"],
-      "automerge": false
     }
   ]
 }
