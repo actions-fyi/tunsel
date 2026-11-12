@@ -3,6 +3,9 @@
 # Docs: https://gh.io/actions-lockfile
 version: 'v0.0.3'
 workflows:
+    '.github/workflows/actions-lock-explain.yml': []
+    '.github/workflows/actions-lock-push.yml': []
+    '.github/workflows/auto-label.yml': []
     '.github/workflows/build.yml':
         - 'actions/attest@v4.2.2'
         - 'actions/checkout@v7.0.1'
@@ -11,10 +14,16 @@ workflows:
         - 'anchore/sbom-action@v0.24.3'
         - 'step-security/go-task-setup-task@v2.2.0'
         - 'step-security/harden-runner@v2.22.4'
+    '.github/workflows/claude.yml': []
+    '.github/workflows/codeql.yml': []
+    '.github/workflows/label-sync.yml': []
+    '.github/workflows/pr-metadata.yml': []
     '.github/workflows/release.yml':
         - 'actions/checkout@v7.0.1'
         - 'actions/download-artifact@v8.0.2'
         - 'step-security/harden-runner@v2.22.4'
+    '.github/workflows/renovate.yml': []
+    '.github/workflows/zizmor.yml': []
 dependencies:
     'actions/attest@v4.2.2':
         ref: 'v4.2.2'
