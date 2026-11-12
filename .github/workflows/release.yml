@@ -68,18 +68,19 @@ jobs:
     uses: $/.github/workflows/build.yml
     with:
       version: ${{ needs.version.outputs.version }}
+    # What build.yml's ipk job needs to attest the release packages.
     permissions:
       contents: read
-      id-token: write
-      attestations: write
-      artifact-metadata: write
+      id-token: write          # OIDC token to sign the attestations with Sigstore
+      attestations: write      # store the attestations on the repository
+      artifact-metadata: write # link the attestations to the built packages
 
   draft:
     name: Draft Release
     needs: [version, build]
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # create the draft release and upload its assets
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@v2.22.4
