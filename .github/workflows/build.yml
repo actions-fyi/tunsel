@@ -71,10 +71,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      # Signed provenance and SBOM attestations on releases.
-      id-token: write
-      attestations: write
-      artifact-metadata: write
+      # Signed provenance and SBOM attestations on releases:
+      id-token: write          # OIDC token to sign the attestations with Sigstore
+      attestations: write      # store the attestations on the repository
+      artifact-metadata: write # link the attestations to the built packages
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@v2.22.4
