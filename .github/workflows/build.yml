@@ -22,6 +22,13 @@ defaults:
   run:
     shell: bash   # -eo pipefail
 
+env:
+  # An exact Task version skips setup-task's release lookup, which fails
+  # whenever the GitHub API answers without 3.x releases. Renovate updates it
+  # through customManagers:githubActionsVersions (in the actions-fyi preset).
+  # renovate: datasource=github-releases depName=go-task/task extractVersion=^v(?<version>.+)$
+  TASK_VERSION: 3.54.0
+
 # Actions are pinned to commit SHAs; Renovate keeps them current.
 jobs:
   test:
@@ -39,10 +46,7 @@ jobs:
           go-version-file: go.mod   # caches modules and build cache, keyed on go.sum
       - uses: step-security/go-task-setup-task@v2.2.0
         with:
-          # An exact version skips the action's release lookup, which fails
-          # whenever the GitHub API answers without 3.x releases (Renovate
-          # updates it, see renovate.json).
-          version: 3.54.0
+          version: ${{ env.TASK_VERSION }}
       - name: vet and unit tests
         run: task test 2>&1 | tee unit.log
       - name: integration tests (root, network namespaces)
@@ -87,7 +91,7 @@ jobs:
           go-version-file: go.mod
       - uses: step-security/go-task-setup-task@v2.2.0
         with:
-          version: 3.54.0 # exact, see the test job
+          version: ${{ env.TASK_VERSION }}
       - name: build packages
         env:
           VERSION: ${{ inputs.version }}
