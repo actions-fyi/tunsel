@@ -268,8 +268,8 @@ remotes:
         default: error
     outputs:
       - download-path
-  actions/setup-go@v7.0.0:
-    sha: b7ad1dad31e06c5925ef5d2fc7ad053ef454303e
+  actions/setup-go@v7.1.0:
+    sha: d8cbb8045d7f43706b9177cceb36c1f91a6644d5
     kind: action
     using: node24
     inputs:
@@ -287,6 +287,15 @@ remotes:
     outputs:
       - go-version
       - cache-hit
+      - GOPATH
+      - GOBIN
+      - go-bin-path
+      - GOROOT
+      - GOCACHE
+      - GOMODCACHE
+      - GOOS
+      - GOARCH
+      - GOTOOLDIR
   actions/upload-artifact@v7.0.2:
     sha: cf430e030ddbb5b0abf93d22962f4752f3646cd9
     kind: action
