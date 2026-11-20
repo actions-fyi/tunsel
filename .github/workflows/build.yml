@@ -33,18 +33,13 @@ env:
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-firewall
     steps:
-      - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@v2.23.0
-        with:
-          egress-policy: audit
-
       - uses: actions/checkout@v7.0.1
       - uses: actions/setup-go@v7.1.0
         with:
           go-version-file: go.mod   # caches modules and build cache, keyed on go.sum
-      - uses: step-security/go-task-setup-task@v2.2.0
+      - uses: go-task/setup-task@v2.2.0
         with:
           version: ${{ env.TASK_VERSION }}
       - name: vet and unit tests
@@ -72,7 +67,7 @@ jobs:
   ipk:
     name: IPK
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-firewall
     permissions:
       contents: read
       # Signed provenance and SBOM attestations on releases:
@@ -80,16 +75,11 @@ jobs:
       attestations: write      # store the attestations on the repository
       artifact-metadata: write # link the attestations to the built packages
     steps:
-      - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@v2.23.0
-        with:
-          egress-policy: audit
-
       - uses: actions/checkout@v7.0.1
       - uses: actions/setup-go@v7.1.0
         with:
           go-version-file: go.mod
-      - uses: step-security/go-task-setup-task@v2.2.0
+      - uses: go-task/setup-task@v2.2.0
         with:
           version: ${{ env.TASK_VERSION }}
       - name: build packages
