@@ -391,8 +391,8 @@ remotes:
       upload-release-assets:
         default: 'true'
       config: {}
-  step-security/go-task-setup-task@v2.2.0:
-    sha: dd101f23669823438597b4ef3482fabd64e6055b
+  go-task/setup-task@v2.2.0:
+    sha: a00fbb05ce67b35648be3c78cbc9fd85354c757e
     kind: action
     using: node24
     inputs:
@@ -404,40 +404,3 @@ remotes:
       max-retries:
         default: '3'
       checksum: {}
-  step-security/harden-runner@v2.23.0:
-    sha: aebdcf6156ab6691adf63218240e476564a1ed4c
-    kind: action
-    using: node24
-    inputs:
-      allowed-endpoints:
-        default: ''
-      denied-endpoints:
-        default: ''
-      egress-policy:
-        default: block
-      token:
-        default: ${{ github.token }}
-      disable-telemetry:
-        default: 'false'
-      disable-sudo:
-        default: 'false'
-      disable-sudo-and-containers:
-        default: 'false'
-      disable-file-monitoring:
-        default: 'false'
-      policy:
-        default: ''
-      api-key:
-        default: ''
-      use-policy-store:
-        default: 'false'
-      deploy-on-self-hosted-vm:
-        default: 'false'
-      customer:
-        default: ''
-      server-name:
-        default: ''
-      secure-registry:
-        default: ''
-      check-run-id:
-        default: ${{ job.check_run_id }}
