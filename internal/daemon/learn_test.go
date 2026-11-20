@@ -131,7 +131,12 @@ func TestLearningTunnelFails(t *testing.T) {
 			h.d.onEvent(ev)
 		default:
 		}
-		return h.d.report(status.Request{}).Tunnels[0].State == health.Unhealthy
+		// The monitor turns unhealthy before its event is queued, so the
+		// state alone does not mean the daemon has acted on it yet.
+		h.d.mu.Lock()
+		forgotten := !h.d.learner.Trained(a("198.18.0.1"))
+		h.d.mu.Unlock()
+		return forgotten && h.d.report(status.Request{}).Tunnels[0].State == health.Unhealthy
 	})
 	if ls := h.tables.last().Learned; len(ls) != 0 {
 		t.Errorf("learned entries of a failed tunnel installed: %+v", ls)
