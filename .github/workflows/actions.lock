@@ -22,7 +22,6 @@ workflows:
         - 'actions/checkout@v7.0.1'
         - 'actions/download-artifact@v8.0.2'
     '.github/workflows/renovate.yml': []
-    '.github/workflows/workflow-sync-dispatch.yml': []
     '.github/workflows/workflow-sync.yml': []
     '.github/workflows/zizmor.yml': []
 dependencies:
