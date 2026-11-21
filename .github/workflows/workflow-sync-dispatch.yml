@@ -22,4 +22,4 @@ jobs:
     permissions:
       contents: read # Requested by the dispatch job since v0.3.0
       id-token: write # Exchange the job's OIDC token with Octo STS
-    uses: actions-fyi/sync-workflows/.github/workflows/_workflow-sync-dispatch.yml@v0.3.0
+    uses: actions-fyi/sync-workflows/.github/workflows/_workflow-sync-dispatch.yml@v0.4.0
