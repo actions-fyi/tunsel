@@ -199,8 +199,8 @@ remotes:
         security-events: write
         contents: read
         actions: read
-  actions-fyi/sync-workflows/.github/workflows/_workflow-sync-dispatch.yml@v0.3.0:
-    sha: 91a149392a1f6a67d1915d15f49246c29b0e9d35
+  actions-fyi/sync-workflows/.github/workflows/_workflow-sync-dispatch.yml@v0.5.0:
+    sha: 29c5dafaf07cf880ce9a06a6bee1db81659233cc
     kind: workflow
     inputs:
       event-type:
@@ -210,8 +210,8 @@ remotes:
       dispatch:
         contents: read
         id-token: write
-  actions-fyi/sync-workflows/.github/workflows/_workflow-sync.yml@v0.3.0:
-    sha: 91a149392a1f6a67d1915d15f49246c29b0e9d35
+  actions-fyi/sync-workflows/.github/workflows/_workflow-sync.yml@v0.5.0:
+    sha: 29c5dafaf07cf880ce9a06a6bee1db81659233cc
     kind: workflow
     inputs:
       dry-run:
