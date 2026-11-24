@@ -15,6 +15,7 @@ workflows:
         - 'go-task/setup-task@v2.2.0'
     '.github/workflows/claude.yml': []
     '.github/workflows/codeql.yml': []
+    '.github/workflows/coverage.yml': []
     '.github/workflows/flowpact.yml': []
     '.github/workflows/label-sync.yml': []
     '.github/workflows/pr-metadata.yml': []
@@ -22,7 +23,6 @@ workflows:
         - 'actions/checkout@v7.0.1'
         - 'actions/download-artifact@v8.0.2'
     '.github/workflows/renovate.yml': []
-    '.github/workflows/workflow-sync-dispatch.yml': []
     '.github/workflows/workflow-sync.yml': []
     '.github/workflows/zizmor.yml': []
 dependencies:

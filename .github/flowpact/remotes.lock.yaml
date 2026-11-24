@@ -2,8 +2,8 @@
 # The interfaces of the remote reusable workflows and actions this repository uses, at the commit each resolved to.
 version: 1
 remotes:
-  actions-fyi/shared-workflows/.github/workflows/_actions-lock.yml@v3.0.0:
-    sha: e594653ae25a378c3f30d543e6273f6b056a6ca9
+  actions-fyi/shared-workflows/.github/workflows/_actions-lock.yml@v4.1.0:
+    sha: 00858efbce4ebc9d593aaa3736a146335eab1bb6
     kind: workflow
     jobPermissions:
       changes:
@@ -39,8 +39,8 @@ remotes:
         issues: write
         id-token: write
         actions: read
-  actions-fyi/shared-workflows/.github/workflows/_codeql.yml@v3.0.0:
-    sha: e594653ae25a378c3f30d543e6273f6b056a6ca9
+  actions-fyi/shared-workflows/.github/workflows/_codeql.yml@v4.1.0:
+    sha: 00858efbce4ebc9d593aaa3736a146335eab1bb6
     kind: workflow
     inputs:
       languages:
@@ -58,8 +58,24 @@ remotes:
       results:
         contents: read
         id-token: write
-  actions-fyi/shared-workflows/.github/workflows/_explain.yml@v3.0.0:
-    sha: e594653ae25a378c3f30d543e6273f6b056a6ca9
+  actions-fyi/shared-workflows/.github/workflows/_coverage.yml@v4.1.0:
+    sha: 00858efbce4ebc9d593aaa3736a146335eab1bb6
+    kind: workflow
+    jobPermissions:
+      find:
+        contents: read
+        actions: read
+        pull-requests: read
+      github:
+        contents: read
+        actions: read
+        code-quality: write
+      deepsource:
+        contents: read
+        actions: read
+        id-token: write
+  actions-fyi/shared-workflows/.github/workflows/_explain.yml@v4.1.0:
+    sha: 00858efbce4ebc9d593aaa3736a146335eab1bb6
     kind: workflow
     secrets:
       CLAUDE_CODE_OAUTH_TOKEN:
@@ -84,8 +100,8 @@ remotes:
         contents: read
         issues: write
         pull-requests: write
-  actions-fyi/shared-workflows/.github/workflows/_flowpact.yml@v3.0.0:
-    sha: e594653ae25a378c3f30d543e6273f6b056a6ca9
+  actions-fyi/shared-workflows/.github/workflows/_flowpact.yml@v4.1.0:
+    sha: 00858efbce4ebc9d593aaa3736a146335eab1bb6
     kind: workflow
     jobPermissions:
       check:
@@ -109,8 +125,8 @@ remotes:
       labels:
         contents: read
         issues: write
-  actions-fyi/shared-workflows/.github/workflows/_pr-metadata.yml@v3.0.0:
-    sha: e594653ae25a378c3f30d543e6273f6b056a6ca9
+  actions-fyi/shared-workflows/.github/workflows/_pr-metadata.yml@v4.1.0:
+    sha: 00858efbce4ebc9d593aaa3736a146335eab1bb6
     kind: workflow
     secrets:
       CLAUDE_CODE_OAUTH_TOKEN:
