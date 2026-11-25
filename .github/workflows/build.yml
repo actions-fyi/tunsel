@@ -105,7 +105,7 @@ jobs:
           done
       - name: generate SBOM
         if: inputs.version != ''
-        uses: anchore/sbom-action@v0.24.3
+        uses: anchore/sbom-action@v0.24.4
         with:
           path: sbom-root
           format: spdx-json
